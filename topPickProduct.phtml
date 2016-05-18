@@ -1,0 +1,72 @@
+<?php $productId = $this->getProduct_id();
+$_product = Mage::getModel('catalog/product')->load($productId); //load the product
+?>
+
+<?php $my_product_url = $_product->getProductUrl(); ?>
+
+<?php $my_product_name = $_product->getName(); ?>
+
+
+<a href="<?php echo $my_product_url; ?>">
+
+    <div class="productContainer">
+        <div class="imgContainer">
+            <img class="img-responsive" src="<? echo Mage::helper('catalog/image')->init($_product, 'thumbnail'); ?>"
+                 alt="<?php echo $this->htmlEscape($_product['name']); ?>" border="0"/>
+        </div>
+        <div class="ratingContainer">
+            <div class="star-five-right">
+                <?php $this->helper('yotpo')->showBottomline($this, $_product); ?>
+                <?php //echo $this->getReviewsSummaryHtml($_product, 'default', false)?>
+            </div>
+        </div>
+        <div class="productNameContainer">
+            <p><?php echo $my_product_name; ?></p>
+        </div>
+        <div class="priceContainer">
+            <div class="priceContainer">
+                <p id="regularPrice"
+                   class="price regular"><?php echo Mage::helper('core')->currency($_product->getPrice()); ?></p>
+
+
+                <p id="salePrice"
+                   class="price sale"><?php echo Mage::helper('core')->currency($_product->getFinalPrice(), true, false); ?></p>
+            </div>
+        </div>
+    </div>
+
+</a>
+
+<script>
+    var $j = jQuery.noConflict();
+    $j(document).ready(function () {
+        var regPrice = $j('.regular');
+        var salePrice = $j('.sale');
+
+        $j.each(regPrice, function (k, v) {
+            console.log(salePrice.eq(k).text());
+
+            if ($j(v).text() === salePrice.eq(k).text()) {
+                salePrice.eq(k).css('display', 'none');
+                regPrice.eq(k).css('color', 'black');
+                regPrice.eq(k).css('text-decoration', 'none');
+
+            } else if ($j(v).text() != salePrice.eq(k).text()) {
+                regPrice.eq(k).css('color', '#cccccc');
+                regPrice.eq(k).css('text-decoration', 'line-through');
+
+            }
+        });
+    });
+
+</script>
+
+
+
+<style>
+    #regularPrice,
+    #salePrice {
+        width: 50%;
+        float: left;
+    }
+</style>
